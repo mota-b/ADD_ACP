@@ -89,3 +89,14 @@ def get_weights(arr):
         v[0].append(   "{:%}".format( (float(e)/float(length)) ) )
         v[1].append(   "{:%}".format( cumul ) )  
     return v
+
+# Get new axes
+def get_new_axes(R, eigen_v):
+    v = []
+    r_length = len(R)
+    v_length = len(eigen_v)
+    for ligne in range(0, r_length):
+        v.append([])
+        for i in range(0, v_length):
+            v[ligne].append(np.dot(R[ligne], eigen_v[i]) )
+    return v

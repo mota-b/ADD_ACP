@@ -12,7 +12,6 @@ m = len(data['subjects'])
 bars = fn.get_bars(data, n, m)
 variances = fn.get_equartypes(data, bars, n, m)
 sigmas = fn.get_sigmas(variances)
-
 ## Center 
 mat_centered = fn.matrix_centre(data, bars, n ,m)
 ## Reduce
@@ -22,10 +21,13 @@ mat_corelation = ( float(1)/float(n) ) * np.dot(np.transpose(mat_reduced), mat_r
 ## eigen values & eigen vectors
 eigen = np.linalg.eigh(mat_corelation)
 eigen_vals = np.flip(eigen[0], 0)
-eigen_vects = np.flip(eigen[1], 0)
+eigen_vects = np.flip(np.transpose(eigen[1]), 0)
 ## weight of each eigen vals
 weight_sum = np.array(fn.get_weights(eigen_vals) )
 
+## calculate new axes
+prec = 20
+new_axes =  np.array(fn.get_new_axes(mat_reduced, eigen_vects))*-1 
 
 men = {
     "title": "Choose the methode", 
@@ -76,9 +78,17 @@ men = {
                             "list":[json.dumps(weight_sum.tolist())]
                         },
                     ]
-                }
+                },
+                {
+                    "title": "New axes",
+                    "isMen": False,
+                    "list":[json.dumps(new_axes.tolist())]
+                },
             ]
         },
+
+
+
         {
             "title": "A.F.P",
             "isMen": False
@@ -86,28 +96,5 @@ men = {
     ]
 }
 
-mn.menu(men)
+mn.menu(men) 
 
-
-#''' ,
-#                            
-                        
-                        
-#                        , , "Reduced matrix", "Corelation matrix (Var/Var)", "Eigen values && Eigen vectors", "New axes", "Return to Methodes menu (Q|q : to quite)"]
-#                } 
-#            }, 
-#            "A_F_P", 
-#            "Press (Q|q) to quite"
-#            ]
-#        },
-#    "met_acp":{
-#""        "title": "A.C.P steps",
-#""        "list": ["Is quantitatif matrix ? ", "Centered matrix", "Reduced matrix", "Corelation matrix (Var/Var)", "Eigen values && Eigen vectors", "New axes", "Return to Methodes menu (Q|q : to quite)"],
-#        "steps":[
-#
-#        ]
-
- #   }
-#}
-# '''
-#
