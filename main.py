@@ -1,6 +1,7 @@
-import numpy as np
 from Data import db
-from Methodes import methodes as mt
+from Methodes import functions as fn, get_key as gt, menu as mn
+import numpy as np
+import json
 
 # Data
 data = db.data
@@ -8,62 +9,92 @@ n = len(data['peopels'])
 m = len(data['subjects'])
 
 # Calculate Col's {moy, equart, sigma}
-print(mt)
-bars = mt.get_bars(data, n, m)
-variances = mt.get_equartypes(data, bars, n, m)
-sigmas = mt.get_sigmas(variances)
-
-
-## Center
-mat_centered = mt.matrix_centre(data, bars, n ,m)
-
-print('\nMatrix')
-print( '        ', ' |'.join(map(str, data['subjects'])) )
-for i in range(0, n) :
-    print( data['peopels'][i], data['matrix'][i])
-
-print('\nBars')
-print (bars)
-
-print ('\nVariances')
-print (variances)
-
-print ('\nSigmas')
-print (sigmas)
-
-print ('\nCentered')
-print ('         ', '     | '.join(map(str, data['subjects'])))
-for i in range(0, n):
-    print (data['peopels'][i], mat_centered[i] )
-
-
-
+bars = fn.get_bars(data, n, m)
+variances = fn.get_equartypes(data, bars, n, m)
+sigmas = fn.get_sigmas(variances)
+## Center 
+mat_centered = fn.matrix_centre(data, bars, n ,m)
 ## Reduce
-mat_reduced = mt.matrix_reduce(mat_centered, sigmas, n ,m)
-
-print ('\nReduced')
-print ('         ', '     | '.join(map(str, data['subjects'])))
-for i in range(0, n):
-    print (data['peopels'][i], mat_reduced[i] )
-
-
+mat_reduced = fn.matrix_reduce(mat_centered, sigmas, n ,m)
 ## Corelation matrix
 mat_corelation = ( float(1)/float(n) ) * np.dot(np.transpose(mat_reduced), mat_reduced)
-
-print ('\nCorealation')
-print ('         ', '   | '.join(map(str, data['subjects'])))
-for i in range(0, m):
-    print (data['subjects'][i], mat_corelation[i] )
-
 ## eigen values & eigen vectors
 eigen = np.linalg.eigh(mat_corelation)
-eigen_vals = eigen[0] 
-eigen_vects = eigen[1]
+eigen_vals = np.flip(eigen[0], 0)
+eigen_vects = np.flip(np.transpose(eigen[1]), 0)
+## weight of each eigen vals
+weight_sum = np.array(fn.get_weights(eigen_vals) )
 
-## eigen vectors
-print ('\nEigen valuse')
-print (eigen_vals )
+## calculate new axes
+prec = 20
+new_axes =  np.array(fn.get_new_axes(mat_reduced, eigen_vects))*-1 
 
-print ('\nEigen vectors')
-for i in range(0, m):
-    print ('Vect{0}: '.format(i), eigen_vects[i])
+men = {
+    "title": "Choose the methode", 
+    "list": [
+        {
+            "title": "A.C.P",
+            "isMen": True,
+            "list": [ 
+                {
+                    "title": "Is quantitatif matrix ?",
+                    "isMen": False,
+                    "list":[fn.is_quantitatif()]
+                },
+                {
+                    "title": "Centered matrix",
+                    "isMen": False,
+                    "list":[json.dumps(mat_centered.tolist())]
+                },
+                {
+                    "title": "Reduced matrix",
+                    "isMen": False,
+                    "list":[json.dumps(mat_reduced.tolist())]
+                },
+                {
+                    "title": "Corelation matrix (Var/Var)",
+                    "isMen": False,
+                    "list":[json.dumps(mat_corelation.tolist())]
+                },
+                {
+                    "title": "Eigen Values & Vectors",
+                    "isMen": True,
+                    "list": [
+                        {
+                            "title": "Eigen Values",
+                            "isMen": False,
+                            "list":[json.dumps(eigen_vals.tolist())]    
+                            
+                        },
+                        {
+                            "title": "Eigen Vectors",
+                            "isMen": False,
+                            "list":[json.dumps(eigen_vects.tolist())]    
+                            
+                        },
+                        {
+                            "title": "Weight and cumulated weight of each eigen val",
+                            "isMen": False,
+                            "list":[json.dumps(weight_sum.tolist())]
+                        },
+                    ]
+                },
+                {
+                    "title": "New axes",
+                    "isMen": False,
+                    "list":[json.dumps(new_axes.tolist())]
+                },
+            ]
+        },
+
+
+
+        {
+            "title": "A.F.P",
+            "isMen": False
+        }
+    ]
+}
+
+mn.menu(men) 
+
