@@ -2,6 +2,9 @@ import numpy as np
 import copy as cp
 
 
+# Is matrix quantitatif
+def is_quantitatif() :
+    return True
 
 # Get column from attr_name
 def get_col(matr, subjects, n, attr):
