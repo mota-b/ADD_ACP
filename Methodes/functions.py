@@ -1,7 +1,6 @@
 import numpy as np
 import copy as cp
 
-
 # Is matrix quantitatif
 def is_quantitatif() :
     return True
@@ -17,7 +16,7 @@ def get_col(matr, subjects, n, attr):
 
 # Get attr_bar 'average'
 def get_bar(vect):
-    return np.average(vect)
+    return float(np.average(vect) )
 
 # Get bars_vect
 def get_bars(data, n, m):
@@ -30,7 +29,7 @@ def get_bars(data, n, m):
 def get_equartype(vect, bar):
     v = cp.copy(vect)
     for i in range(0, len(v)):
-        v[i] = np.power(v[i]-bar, 2)
+        v[i] = np.power(float(v[i])-float(bar), 2)
     return np.average(v) 
 
 # Get equartype
@@ -54,7 +53,7 @@ def get_equartypes(data, bars, n, m):
 def get_sigmas(equarts):
     s = []
     for e in equarts:
-        s.append(np.sqrt(e))
+        s.append(np.sqrt(float(e) ))
     return s
 
 
@@ -80,3 +79,13 @@ def matrix_reduce(centered, sigmas, n, m):
     return np.transpose(np.array(mat))
 
 
+# Get weight of a val in an array %
+def get_weights(arr):
+    v = [[],[]]
+    length = len(arr)
+    cumul = 0 
+    for e in arr:
+        cumul += (float(e)/float(length))
+        v[0].append(   "{:%}".format( (float(e)/float(length)) ) )
+        v[1].append(   "{:%}".format( cumul ) )  
+    return v

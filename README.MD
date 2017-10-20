@@ -37,9 +37,9 @@ MATRIX-data, dim(n*m), information(100%) ==> Reduce_Dim_Methode() ==> Representa
         # corelation " var/var "
         C = (1/n) * transpose(mat_R) * mat_R
 
-        # find eigen vals "resove the equation : det(c - landa * I) = 0 " [every landa represent a % from our tota information]
+        # find eigen vals "resove the equation : det( transpose(mat_R) * mat_R - landa * I) = 0 " [every landa represent a % from our tota information]
 
-        # find eigen vectors
+        # find eigen vectors "resove the equation : transpose(mat_R) * mat_R * V_i = landa_i "
 
         # calculate new axes witch represente our 5 variable
  

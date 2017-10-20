@@ -1,12 +1,14 @@
 import os
 import get_key as gt
-
+import numpy as np
+import json
 on = os.name
 
 def print_menu(title, my_list, index):
     print("\n\t{0}\n".format(title))
     for e in my_list:
         i = my_list.index(e)
+        
         if index == i:
             print("-{0}) {1} (!)".format(i, e["title"]))
         else:
@@ -19,10 +21,8 @@ def menu(men):
 
     length = len(my_list)
     index = 0
-    ''' print title
-    print my_list[0]["title"] '''
 
-
+    
     while True:
         os.system('cls' if on == 'nt' else 'clear')
         print_menu(title, my_list, index)
@@ -43,12 +43,17 @@ def menu(men):
             if men["list"][index]["isMen"] == True:
                 if( menu(men["list"][index]) == -1 ):
                     break
-            else :
-                func = men["list"][index]["list"] 
+            elif men["list"][index]["isMen"] == False:
                 print("|")
                 print("|")
                 print("V\n")
-                print(func[0])
+                
+                elem = men["list"][index]["list"][0]
+                type_e = type(men["list"][index]["list"][0])
+                if type_e == type("") :
+                    print( np.array( json.loads( elem ) ) )
+                else :
+                    print(elem)
                 k = gt.wait()
                 if k == ord('q') or k == ord('Q'): return -1 
             
