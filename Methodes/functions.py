@@ -100,3 +100,14 @@ def get_new_axes(R, eigen_v):
         for i in range(0, v_length):
             v[ligne].append(np.dot(R[ligne], eigen_v[i]) )
     return v
+
+# Get Contribution
+def get_contribution(axes, eigen_vals):
+    v = []
+    a_length = len(axes)
+    e_length = len(eigen_vals)
+    for personne in range(0, a_length):
+        v.append([])
+        for axe in range(0, e_length):
+            v[personne].append(  (float(1)/float(a_length)) * ( float(pow(axes[personne][axe], 2)) / float(eigen_vals[axe] )) )
+    return v

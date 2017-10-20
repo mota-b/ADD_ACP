@@ -9,11 +9,11 @@ in order to represente it in a plan (Better) or a 3D env (at less);
 ## Schema ##
 ############
 
-MATRIX-data, dim(n*m), information(100%) ==> Reduce_Dim_Methode() ==> Representative(),dim(n*(2|3)), information(<100%)
+MATRIX-data, dim(n*m), information(100%) ==> Reduce_Dim_Methode() ==> Matrix-Representative(),dim(n*(2|3)), information(<100%)
 
 
 - Methodes {
-    ACP: "Analyse par Composent Principale"
+    A.P.C: "Analyse by Principal Composent"
 }
 
 
@@ -39,9 +39,15 @@ MATRIX-data, dim(n*m), information(100%) ==> Reduce_Dim_Methode() ==> Representa
 
         # find eigen vals "resove the equation : det( transpose(mat_R) * mat_R - landa * I) = 0 " [every landa represent a % from our tota information]
 
-        # find eigen vectors "resove the equation : transpose(mat_R) * mat_R * V_i = landa_i "
+        # find eigen vectors for all landa(s) "resove the equations : transpose(mat_R) * mat_R * V_i = landa_i * V_i "
 
         # calculate new axes witch represente our 5 variable
+        exemple: Axe[i] = tuple(persone)_from_R * eigenVect[i]
+
+        # calculate contribution of each persone in new axes 
+        exemple: for each personne in Axe(i)
+            weight(personne) =  ( 1/(nbr_personne) ) * ( valu_personne_in(Axe_i)²/eigenvalue(Axe_i) )
+        
  
     else 
         # we can't apply acp      
